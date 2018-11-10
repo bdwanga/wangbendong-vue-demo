@@ -1,11 +1,10 @@
 <template>
   <div class="header_container">
+    <!--图标分隔符-->
     <el-breadcrumb separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item v-for="(item, index) in $route.meta" :key="index">{{item}}</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-dropdown menu-align='start'>
-    </el-dropdown>
   </div>
 </template>
 

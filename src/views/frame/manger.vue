@@ -2,7 +2,7 @@
   <div class="manage_page fillcontain">
     <el-row style="height: 100%;">
       <el-col :span="4"  style="min-height: 100%; background-color: #324057;">
-        <el-menu :default-active="defaultActive" style="min-height: 100%;" background-color="#324057" theme="dark" text-color="#fff"
+        <el-menu :default-active="defaultActive" style="min-height: 100%;" background-color="#324057" text-color="#fff"
                  active-text-color="#ffd04b" router>
           <el-menu-item index="/"><i class="el-icon-menu"></i>首页</el-menu-item>
           <el-submenu index="2">

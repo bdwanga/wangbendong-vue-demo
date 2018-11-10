@@ -1,14 +1,19 @@
 <template>
   <div>
-    <head-top></head-top>
+    <imp-header></imp-header>
+    <router-view></router-view>
+    <imp-footer></imp-footer>
   </div>
 </template>
 
 <script>
-import headTop from '@/components/headTop'
+import impHeader from '@/components/header'
+import impFooter from '@/components/footer'
+
 export default {
   components: {
-    headTop
+    impHeader,
+    impFooter
   }
 }
 </script>

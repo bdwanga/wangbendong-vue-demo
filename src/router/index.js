@@ -16,21 +16,24 @@ export default new Router({
       component: HelloWorld
     },
     {
-      path: '/',
+      path: '/', // 一级路由
       component: manger,
       name: '',
-      children: [{
+      children: [{ // 二级路由
         path: '',
         component: home,
-        meta: []
-      }, {
-        path: '/userList',
-        component: userList,
-        meta: ['数据管理', '用户管理']
-      }, {
-        path: '/orgTree',
-        component: orgTree,
-        meta: ['数据管理', '组织管理']
+        meta: [],
+        children: [ // 三级路由
+          {
+            path: '/userList',
+            component: userList,
+            meta: ['数据管理', '用户管理']
+          }, {
+            path: '/orgTree',
+            component: orgTree,
+            meta: ['数据管理', '组织管理']
+          }
+        ]
       }]
     }
   ]
