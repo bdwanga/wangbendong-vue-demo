@@ -1,7 +1,7 @@
 <template>
   <el-dialog
     :visible.sync="isShow"
-    title="新增用户"
+    :title="title"
     width="600px"
   >
     <div>
@@ -72,6 +72,11 @@ export default {
   },
   components: {
     'elSelectTree': selectTree
+  },
+  computed: {
+    title () {
+      return this.type === 'add' ? '新增用户' : '修改用户'
+    }
   },
   watch: {
     isShow (val) {

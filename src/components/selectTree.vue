@@ -1,23 +1,5 @@
 <template>
   <div class="el-select" v-clickoutside="handleClose">
-    <div
-      class="el-select__tags"
-      v-if="multiple"
-      @click.stop="toggleMenu"
-      ref="tags"
-      :style="{ 'max-width': inputWidth - 32 + 'px' }">
-      <transition-group @after-leave="resetInputHeight">
-        <el-tag
-          v-for="item in selected"
-          :key="item.id"
-          closable
-          type="primary"
-          @close="deleteTag($event, item)"
-          close-transition>
-          <span class="el-select__tags-text">{{ item[propNames.label] }}</span>
-        </el-tag>
-      </transition-group>
-    </div>
     <el-input
       ref="reference"
       v-model="selectedLabel"
@@ -26,13 +8,11 @@
       :name="name"
       :size="size"
       :disabled="disabled"
-      :readonly="multiple"
-      :validate-event="false"
-      @focus="visible = true"
-      @click="handleIconClick"
+      :readonly="true"
+      @click.native="handleIconClick"
       @mouseenter.native="inputHovering = true"
-      @mouseleave.native="inputHovering = false"
-      :icon="iconClass">
+      @mouseleave.native="inputHovering = false">
+      <i slot="suffix" class="el-input__icon" :class="iconClass" @click.native="handleIconClick"></i>
     </el-input>
     <transition
       name="el-zoom-in-top"
@@ -40,7 +20,7 @@
       @after-enter="handleMenuEnter">
       <el-select-menu
         ref="popper"
-        v-show="visible && emptyText !== false">
+        v-show="visible">
         <el-scrollbar
           tag="div"
           wrap-class="el-select-dropdown__wrap"
@@ -86,11 +66,7 @@ export default {
 
   computed: {
     iconClass () {
-      let criteria = this.clearable && !this.disabled &&
-          this.inputHovering && !this.multiple &&
-          this.value !== undefined && this.value != null &&
-          this.value !== ''
-      return criteria ? 'circle-close is-show-close' : 'caret-top'
+      return this.visible ? 'el-icon-arrow-up' : 'el-icon-arrow-down'
     },
 
     emptyText () {
@@ -157,6 +133,7 @@ export default {
 
   watch: {
     value (val) {
+      console.log(1)
       this.handleResize()
       if (val) {
         this.currentPlaceholder = ''
@@ -228,6 +205,7 @@ export default {
     },
 
     setSelected (ids) {
+      console.log(ids)
       if (ids) {
         if (this.multiple) {
           this.$refs.tree.setCheckedKeys(ids)
@@ -243,11 +221,9 @@ export default {
     },
 
     handleIconClick (event) {
-      if (this.iconClass.indexOf('circle-close') > -1) {
-        this.deleteSelected(event)
-      } else {
-        this.toggleMenu()
-      }
+      console.log('click')
+
+      this.toggleMenu()
     },
 
     doDestroy () {
@@ -303,9 +279,7 @@ export default {
       this.handleResize()
     },
     toggleMenu () {
-      if (this.visible) {
-        return
-      }
+      console.log('toggleMenu')
       if (!this.disabled) {
         this.visible = !this.visible
       }
@@ -364,7 +338,7 @@ export default {
     if (!this.multiple && Array.isArray(this.value)) {
       this.$emit('input', '')
     }
-    this.setSelected()
+    this.setSelected(this.value)
     this.$on('setSelected', this.setSelected)
   },
 

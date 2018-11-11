@@ -1,9 +1,9 @@
 <template>
   <el-dialog
     :visible.sync="isShow"
-    title="新增组织机构"
+    :title="title"
     width="600px"
-  >{{orgForm}}
+  >
     <div>
       <el-form ref="form" label-width="100px" :model="orgForm" :rules="rules">
         <el-form-item label="组织编码" prop="orgId" v-if="type=='add'">
@@ -12,7 +12,7 @@
         <el-form-item label="组织名称" prop="orgName">
           <el-input v-model="orgForm.orgName"></el-input>
         </el-form-item>
-        <el-form-item label="父级组织" prop="parentId">
+        <el-form-item label="父级组织" prop="parentId" v-if="orgForm.parentId != 'root'">
           <el-select-tree v-model="orgForm.parentId" :treeData="orgTree" :propNames="defaultProps" clearable
                           placeholder="请选择父级">
           </el-select-tree>
@@ -68,8 +68,12 @@ export default {
   components: {
     'elSelectTree': selectTree
   },
+  computed: {
+    title () {
+      return this.type === 'add' ? '新增组织' : '修改组织'
+    }
+  },
   mounted () {
-    this.isShow = this.visible
     this.loadOrgTree()
   },
   watch: {
@@ -81,7 +85,7 @@ export default {
     visible (val) {
       if (val) {
         this.isShow = this.visible
-        this.loadOrgTree()
+        // this.loadOrgTree()
       }
     }
   },
@@ -115,11 +119,9 @@ export default {
     async loadOrgTree () {
       let res = await orgApi.getOrgSubs(this.rootOrg)
       if (res.state === '0') {
+        this.isShow = this.visible
         this.orgTree = res.data
       }
-    },
-    log (val) {
-      console.log(val)
     }
 
   }
