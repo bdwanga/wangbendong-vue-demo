@@ -45,5 +45,15 @@ export default {
   },
   getEmptyOrg: () => {
     return {orgId: '', orgName: '', parentId: ''}
+  },
+  // 查询组织详细
+  getOrgDetail: async (orgId) => {
+    let resp = await axios.get(`/api/orgs/${orgId}/detail`)
+    return resp.data
+  },
+  // 查询组织下级列表
+  getOrgSubs: async (orgId) => {
+    let resp = await axios.get(`/api/orgs/${orgId}/subs`)
+    return resp.data
   }
 }

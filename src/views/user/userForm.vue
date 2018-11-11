@@ -16,7 +16,9 @@
           <el-input type="password" v-model="userForm.password"></el-input>
         </el-form-item>
         <el-form-item label="单位" prop="orgId">
-          <el-input  v-model="userForm.orgId"></el-input>
+          <el-select-tree v-model="userForm.orgId" :treeData="orgTree" :propNames="defaultProps" clearable
+                          placeholder="请选择父级">
+          </el-select-tree>
         </el-form-item>
       </el-form>
     </div>
@@ -28,6 +30,9 @@
 
 <script>
 import userApi from '@/api/user/user'
+import selectTree from '@/components/selectTree.vue'
+import orgApi from '@/api/org/org'
+
 export default {
   props: {
     visible: {
@@ -37,7 +42,10 @@ export default {
     userForm: {
       type: Object
     },
-    type: {}
+    type: {},
+    rootOrg: {
+      default: 'root'
+    }
   },
   data () {
     return {
@@ -49,11 +57,21 @@ export default {
           {required: true, trigger: 'change', message: '请输入密码!'}
         ]
       },
-      isShow: false
+      isShow: false,
+      orgTree: {},
+      defaultProps: {
+        children: 'children',
+        label: 'orgName',
+        id: 'orgId'
+      }
     }
   },
   mounted () {
     this.isShow = this.visible
+    this.loadOrgTree()
+  },
+  components: {
+    'elSelectTree': selectTree
   },
   watch: {
     isShow (val) {
@@ -64,6 +82,7 @@ export default {
     visible (val) {
       if (val) {
         this.isShow = this.visible
+        this.loadOrgTree()
       }
     }
   },
@@ -92,6 +111,12 @@ export default {
           }
         }
       })
+    },
+    async loadOrgTree () {
+      let res = await orgApi.getOrgSubs(this.rootOrg)
+      if (res.state === '0') {
+        this.orgTree = res.data
+      }
     }
   }
 }

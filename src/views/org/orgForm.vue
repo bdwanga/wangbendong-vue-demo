@@ -3,7 +3,7 @@
     :visible.sync="isShow"
     title="新增组织机构"
     width="600px"
-  >
+  >{{orgForm}}
     <div>
       <el-form ref="form" label-width="100px" :model="orgForm" :rules="rules">
         <el-form-item label="组织编码" prop="orgId" v-if="type=='add'">
@@ -13,7 +13,9 @@
           <el-input v-model="orgForm.orgName"></el-input>
         </el-form-item>
         <el-form-item label="父级组织" prop="parentId">
-          <el-input v-model="orgForm.parentId"></el-input>
+          <el-select-tree v-model="orgForm.parentId" :treeData="orgTree" :propNames="defaultProps" clearable
+                          placeholder="请选择父级">
+          </el-select-tree>
         </el-form-item>
       </el-form>
     </div>
@@ -25,6 +27,8 @@
 
 <script>
 import orgApi from '@/api/org/org'
+import selectTree from '@/components/selectTree.vue'
+
 export default {
   props: {
     visible: {
@@ -32,8 +36,12 @@ export default {
       default: false
     },
     orgForm: {
+      type: Object
     },
-    type: {}
+    type: {},
+    rootOrg: {
+      default: 'root'
+    }
   },
   data () {
     return {
@@ -48,11 +56,21 @@ export default {
           {required: true, trigger: 'change', message: '请选择父级组织!'}
         ]
       },
-      isShow: false
+      isShow: false,
+      defaultProps: {
+        children: 'children',
+        label: 'orgName',
+        id: 'orgId'
+      },
+      orgTree: {}
     }
+  },
+  components: {
+    'elSelectTree': selectTree
   },
   mounted () {
     this.isShow = this.visible
+    this.loadOrgTree()
   },
   watch: {
     isShow (val) {
@@ -63,6 +81,7 @@ export default {
     visible (val) {
       if (val) {
         this.isShow = this.visible
+        this.loadOrgTree()
       }
     }
   },
@@ -92,7 +111,17 @@ export default {
           }
         }
       })
+    },
+    async loadOrgTree () {
+      let res = await orgApi.getOrgSubs(this.rootOrg)
+      if (res.state === '0') {
+        this.orgTree = res.data
+      }
+    },
+    log (val) {
+      console.log(val)
     }
+
   }
 }
 </script>

@@ -92,7 +92,6 @@ export default {
       if (!orgInfo) {
         orgInfo = orgApi.getEmptyOrg()
       }
-      console.log(orgInfo)
       this.org = orgInfo
       this.editType = type
     },
