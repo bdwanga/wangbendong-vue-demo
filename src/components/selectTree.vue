@@ -20,7 +20,7 @@
       @after-enter="handleMenuEnter">
       <el-select-menu
         ref="popper"
-        v-show="visible">
+        v-show="visible" :style="styleObject">
         <el-scrollbar
           tag="div"
           wrap-class="el-select-dropdown__wrap"
@@ -129,7 +129,10 @@ export default {
       selectedLabel: '',
       bottomOverflow: 0,
       topOverflow: 0,
-      inputHovering: false
+      inputHovering: false,
+      styleObject: {
+        zIndex: 3000
+      }
     }
   },
 
@@ -157,6 +160,7 @@ export default {
       } else {
         this.handleIconShow()
         this.broadcast('ElSelectDropdown', 'updatePopper')
+        this.setTreezIndex()
       }
       this.$emit('visible-change', val)
     }
@@ -277,12 +281,35 @@ export default {
       this.handleResize()
     },
     toggleMenu () {
-      console.log('toggleMenu')
       if (!this.disabled) {
         this.visible = !this.visible
+        this.setTreezIndex()
       }
     },
-
+    setTreezIndex () {
+      if (this.visible) {
+        console.log(this.$refs.popper.$el.style.zIndex)
+        let time = setTimeout(() => {
+          this.styleObject.zIndex++
+          clearTimeout(time)
+        }, 100)
+        console.log(this.$refs.popper.$el.style.zIndex)
+        if (this.$refs.popper.$el.style.zIndex < 3000) {
+          let time = setTimeout(() => {
+            this.styleObject.zIndex++
+            clearTimeout(time)
+          }, 100)
+        }
+        console.log(this.$refs.popper.$el.style.zIndex)
+        if (this.$refs.popper.$el.style.zIndex < 3000) {
+          let time = setTimeout(() => {
+            this.styleObject.zIndex++
+            clearTimeout(time)
+          }, 100)
+        }
+        console.log(this.$refs.popper.$el.style.zIndex)
+      }
+    },
     resetScrollTop () {
       let bottomOverflowDistance = this.options[this.hoverIndex].$el.getBoundingClientRect().bottom -
           this.$refs.popper.$el.getBoundingClientRect().bottom

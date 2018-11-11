@@ -86,7 +86,7 @@ export default {
     visible (val) {
       if (val) {
         this.isShow = this.visible
-        this.loadOrgTree()
+        // this.loadOrgTree()
       }
     }
   },
