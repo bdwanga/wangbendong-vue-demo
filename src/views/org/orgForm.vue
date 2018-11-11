@@ -6,14 +6,14 @@
   >
     <div>
       <el-form ref="form" label-width="100px" :model="orgForm" :rules="rules">
-        <el-form-item label="组织编码" prop="orgId" v-if="type=='add'">
-          <el-input v-model="orgForm.orgId"></el-input>
-        </el-form-item>
+        <!--<el-form-item label="组织编码" prop="orgId" v-if="type=='add'">-->
+          <!--<el-input v-model="orgForm.orgId"></el-input>-->
+        <!--</el-form-item>-->
         <el-form-item label="组织名称" prop="orgName">
           <el-input v-model="orgForm.orgName"></el-input>
         </el-form-item>
         <el-form-item label="父级组织" prop="parentId" v-if="orgForm.parentId != 'root'">
-          <el-select-tree v-model="orgForm.parentId" :treeData="orgTree" :propNames="defaultProps" clearable
+          <el-select-tree v-model="orgForm.parentId" :treeData="orgTree" :propNames="defaultProps" clearable :expandKey="expandKey"
                           placeholder="请选择父级">
           </el-select-tree>
         </el-form-item>
@@ -62,7 +62,8 @@ export default {
         label: 'orgName',
         id: 'orgId'
       },
-      orgTree: {}
+      orgTree: {},
+      expandKey: [this.orgForm.parentId]
     }
   },
   components: {
@@ -85,7 +86,7 @@ export default {
     visible (val) {
       if (val) {
         this.isShow = this.visible
-        // this.loadOrgTree()
+        this.loadOrgTree()
       }
     }
   },

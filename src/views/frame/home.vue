@@ -57,4 +57,11 @@ export default {
   .wan{
     .sc(16px, #333)
   }
+  th {
+    font-weight: bold;
+  }
+  thead th, .el-table__header-wrapper thead th{
+    background-color: #faffff;
+    color: #1f2d3d;
+  }
 </style>

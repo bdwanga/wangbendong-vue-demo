@@ -5,20 +5,19 @@
         <el-form-item>
           <el-button type="primary" icon="el-icon-plus" @click="openDialog($event,'','add')">新增</el-button>
         </el-form-item>
-        <el-form-item>
-          <el-button type="danger" icon="el-icon-delete" @click="batchDelete('','add')">删除</el-button>
-        </el-form-item>
+        <!--<el-form-item>-->
+          <!--<el-button type="danger" icon="el-icon-delete" @click="batchDelete('','add')">删除</el-button>-->
+        <!--</el-form-item>-->
       </el-form>
     </h3>
     <el-row slot="body" :gutter="24" style="margin-bottom: 20px;">
-      <el-col :span="8" :xs="24" :sm="24" :md="8" :lg="8" style="margin-bottom: 20px;font-size: small;overflow: auto">
+      <el-col :span="8" :xs="24" :sm="24" :md="8" :lg="8" style="margin-bottom: 20px;overflow: auto">
         <el-card class="box-card" >
         <el-tree v-if="orgTree"
                  :load="loadNode"
                  :props="props"
                  ref="orgTree"
                  lazy
-                 show-checkbox
                  highlight-current
                  node-key="orgId"
                  :expand-on-click-node="false"
@@ -27,9 +26,7 @@
         </el-card>
       </el-col>
       <el-col :span="16" :xs="24" :sm="24" :md="16" :lg="16">
-        <el-card class="box-card" >
          <user-list :orgId="query.orgId" :isView="true" viewTitle="人员列表"></user-list>
-        </el-card>
       </el-col>
       <org-form :visible.sync="visible"  :orgForm="org" :type="editType"></org-form>
     </el-row>
@@ -118,7 +115,7 @@ export default {
           })
         } else {
           this.$message({
-            message: '删除失败!',
+            message: resp.message,
             type: 'error'
           })
         }
@@ -155,9 +152,10 @@ export default {
 
   .render-content i.fa {
     margin-left: 10px;
+    color: #03ade6;
   }
 
   .render-content i.fa:hover{
-    color: #03ade6;
+    color: #b642e6;
   }
 </style>

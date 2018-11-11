@@ -30,9 +30,10 @@
           <el-tree :data="treeData" ref="tree"
                    :show-checkbox="multiple"
                    node-key="id"
-                   check-strictly
+                   highlight-current
                    :props="propNames"
                    @check-change="handleCheckChange"
+                   default-expand-all
                    @node-click="handleTreeNodeClick">
           </el-tree>
         </el-scrollbar>
@@ -98,6 +99,7 @@ export default {
     loadingText: String,
     noDataText: String,
     multiple: Boolean,
+    expandKey: Array,
     propNames: {
       type: Object,
       default () {
@@ -133,7 +135,6 @@ export default {
 
   watch: {
     value (val) {
-      console.log(1)
       this.handleResize()
       if (val) {
         this.currentPlaceholder = ''
@@ -205,7 +206,6 @@ export default {
     },
 
     setSelected (ids) {
-      console.log(ids)
       if (ids) {
         if (this.multiple) {
           this.$refs.tree.setCheckedKeys(ids)
@@ -221,8 +221,6 @@ export default {
     },
 
     handleIconClick (event) {
-      console.log('click')
-
       this.toggleMenu()
     },
 
