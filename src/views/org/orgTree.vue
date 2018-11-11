@@ -3,7 +3,7 @@
     <h3 class="box-title" slot="header" style="width: 100%;">
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item>
-          <el-button type="primary" icon="el-icon-plus" @click="newAdd('','add')">新增</el-button>
+          <el-button type="primary" icon="el-icon-plus" @click="openDialog($event,'','add')">新增</el-button>
         </el-form-item>
         <el-form-item>
           <el-button type="danger" icon="el-icon-delete" @click="batchDelete('','add')">删除</el-button>
@@ -31,6 +31,7 @@
          <user-list :orgId="query.orgId" :isView="true" viewTitle="人员列表"></user-list>
         </el-card>
       </el-col>
+      <org-form :visible.sync="visible"  :orgForm="org" :type="editType"></org-form>
     </el-row>
   </imp-panel>
 </template>
@@ -39,6 +40,7 @@
 import panel from '@/components/panel.vue'
 import orgApi from '@/api/org/org'
 import userList from '@/views/user/userList'
+import orgForm from './orgForm'
 
 export default {
   data () {
@@ -56,12 +58,15 @@ export default {
         orgId: ''
       },
       org: {},
-      editType: 'add'
+      editType: 'add',
+      visible: false,
+      resolve: {}
     }
   },
   components: {
     'imp-panel': panel,
-    userList
+    userList,
+    orgForm
   },
   methods: {
     handleNodeClick (data) {
@@ -81,7 +86,19 @@ export default {
       let res = await orgApi.paging(this.query)
       resolve(res.data.list)
     },
-    remove (node, data) {
+    openDialog (e, orgInfo, type) {
+      if (e) { e.stopPropagation() }
+      this.visible = true
+      if (!orgInfo) {
+        orgInfo = orgApi.getEmptyOrg()
+      }
+      console.log(orgInfo)
+      this.org = orgInfo
+      this.editType = type
+    },
+
+    remove (e, node, data) {
+      if (e) { e.stopPropagation() }
       this.$confirm('此操作将永久删除该单位, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -118,22 +135,14 @@ export default {
             <span>{node.label}</span>
           </span>
           <span class="render-content">
-            <i class="fa el-icon-edit-outline" on-click={ () => this.openDialog(data, 'edit') }></i>
-            <i class="fa el-icon-delete" on-click={ () => this.remove(node, data) }></i>
+            <i class="fa el-icon-edit-outline" on-click={ (e) => this.openDialog(e, data, 'edit') }></i>
+            <i class="fa el-icon-delete" on-click={ (e) => this.remove(e, node, data) }></i>
           </span>
         </span>)
     }
   },
   mounted () {
     // this.loadNode()
-  },
-  openDialog (orgInfo, type) {
-    this.visible = true
-    if (!orgInfo) {
-      orgInfo = orgApi.getEmptyOrg()
-    }
-    this.org = orgInfo
-    this.editType = type
   }
 
 }

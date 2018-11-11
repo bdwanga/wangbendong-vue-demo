@@ -1,22 +1,19 @@
 <template>
   <el-dialog
     :visible.sync="isShow"
-    title="新增用户"
+    title="新增组织机构"
     width="600px"
   >
     <div>
-      <el-form ref="form" label-width="100px" :model="userForm" :rules="rules">
-        <el-form-item label="姓名" prop="name">
-          <el-input v-model="userForm.name"></el-input>
+      <el-form ref="form" label-width="100px" :model="orgForm" :rules="rules">
+        <el-form-item label="组织编码" prop="orgId" v-if="type=='add'">
+          <el-input v-model="orgForm.orgId"></el-input>
         </el-form-item>
-        <el-form-item label="昵称" prop="nick">
-          <el-input v-model="userForm.nick"></el-input>
+        <el-form-item label="组织名称" prop="orgName">
+          <el-input v-model="orgForm.orgName"></el-input>
         </el-form-item>
-        <el-form-item label="密码" prop="password" v-if="type=='add'">
-          <el-input type="password" v-model="userForm.password"></el-input>
-        </el-form-item>
-        <el-form-item label="单位" prop="orgId">
-          <el-input  v-model="userForm.orgId"></el-input>
+        <el-form-item label="父级组织" prop="parentId">
+          <el-input v-model="orgForm.parentId"></el-input>
         </el-form-item>
       </el-form>
     </div>
@@ -27,26 +24,28 @@
 </template>
 
 <script>
-import userApi from '@/api/user/user'
+import orgApi from '@/api/org/org'
 export default {
   props: {
     visible: {
       type: Boolean,
       default: false
     },
-    userForm: {
-      type: Object
+    orgForm: {
     },
     type: {}
   },
   data () {
     return {
       rules: {
-        name: [
-          {required: true, trigger: 'change', message: '请输入姓名!'}
+        orgId: [
+          {required: true, trigger: 'change', message: '请输入组织编码!'}
         ],
-        password: [
-          {required: true, trigger: 'change', message: '请输入密码!'}
+        orgName: [
+          {required: true, trigger: 'change', message: '请输入组织名称!'}
+        ],
+        parentId: [
+          {required: true, trigger: 'change', message: '请选择父级组织!'}
         ]
       },
       isShow: false
@@ -73,17 +72,18 @@ export default {
         if (valid) {
           let res
           if (this.type === 'add') {
-            res = await userApi.create(this.userForm)
+            res = await orgApi.create(this.orgForm)
           } else {
-            res = await userApi.modify(this.userForm)
+            res = await orgApi.modify(this.orgForm)
           }
           if (res.state === '0') {
-            this.isShow = false
-            this.$emit('success')
+            // this.isShow = false
+            // this.$emit('success')
             this.$message({
               message: '保存成功',
               type: 'success'
             })
+            this.$router.push({path: '/orgTree', query: {t: Date.now()}})
           } else {
             this.$message({
               message: res.message,

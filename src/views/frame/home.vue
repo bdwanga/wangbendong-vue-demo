@@ -1,7 +1,7 @@
 <template>
   <div>
     <imp-header></imp-header>
-    <router-view></router-view>
+    <router-view :key="$route.path + $route.query.t"></router-view>
     <imp-footer></imp-footer>
   </div>
 </template>
