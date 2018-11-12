@@ -16,9 +16,16 @@
           <el-input type="password" v-model="userForm.password"></el-input>
         </el-form-item>
         <el-form-item label="单位" prop="orgId">
-          <el-select-tree v-model="userForm.orgId" :treeData="orgTree" :propNames="defaultProps" clearable
-                          placeholder="请选择父级">
-          </el-select-tree>
+          <!--<el-select-tree v-model="userForm.orgId" :treeData="orgTree" :propNames="defaultProps" clearable-->
+                          <!--placeholder="请选择父级">-->
+          <!--</el-select-tree>-->
+          <el-cascader
+            :options="orgTree"
+            v-model="selectedOptions"
+            :show-all-levels="false"
+            :props="defaultProps"
+            change-on-select
+          ></el-cascader>
         </el-form-item>
       </el-form>
     </div>
@@ -62,8 +69,10 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'orgName',
-        id: 'orgId'
-      }
+        id: 'orgId',
+        value: 'orgId'
+      },
+      selectedOptions: []
     }
   },
   mounted () {
@@ -87,7 +96,7 @@ export default {
     visible (val) {
       if (val) {
         this.isShow = this.visible
-        this.loadOrgTree()
+        this.getOrgLevelName()
       }
     }
   },
@@ -95,6 +104,11 @@ export default {
     save () {
       this.$refs.form.validate(async (valid) => {
         if (valid) {
+          // 只选取最后节点
+          if (this.selectedOptions.length > 0) {
+            this.userForm.orgId = this.selectedOptions[this.selectedOptions.length - 1]
+          }
+
           let res
           if (this.type === 'add') {
             res = await userApi.create(this.userForm)
@@ -121,6 +135,18 @@ export default {
       let res = await orgApi.getOrgSubs(this.rootOrg)
       if (res.state === '0') {
         this.orgTree = res.data
+      }
+    },
+    async getOrgLevelName () {
+      let res = await orgApi.getOrg(this.userForm.orgId)
+      if (res.state === '0') {
+        // 列表默认值
+        if (res.data && res.data.orgLevels) {
+          this.selectedOptions = res.data.orgLevels.split('-')
+          this.selectedOptions.push(res.data.orgId)
+        } else {
+          this.$set(this, 'selectedOptions', [])
+        }
       }
     }
   }

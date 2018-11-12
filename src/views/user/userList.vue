@@ -1,14 +1,14 @@
 <template>
   <imp-panel>
     <h3 class="box-title" slot="header" style="width: 100%;">
-      <el-form :inline="true" class="demo-form-inline">
+      <el-form :inline="true" class="demo-form-inline" @submit.native.prevent>
         <el-form-item v-if="!isView">
           <el-button type="primary" icon="el-icon-plus" @click="openDialog('','add')">新增</el-button>
         </el-form-item>
         <el-form-item v-else :label="viewTitle">
         </el-form-item>
         <el-form-item style="float: right">
-          <el-input placeholder="输入用户名称" v-model="query.userName" @keyup.enter.native.prevent="search($event)">
+          <el-input placeholder="输入用户名称" v-model="query.userName" @keyup.enter.native="search($event)">
             <i slot="suffix" class="el-input__icon el-icon-search" @click="search($event)"></i>
           </el-input>
         </el-form-item>

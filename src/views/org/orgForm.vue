@@ -13,9 +13,16 @@
           <el-input v-model="orgForm.orgName"></el-input>
         </el-form-item>
         <el-form-item label="父级组织" prop="parentId" v-if="orgForm.parentId != 'root' || type !='edit'">
-          <el-select-tree v-model="orgForm.parentId" :treeData="orgTree" :propNames="defaultProps" clearable :expandKey="expandKey" :disabled="disabled"
-                          placeholder="请选择父级">
-          </el-select-tree>
+          <!--<el-select-tree v-model="orgForm.parentId" :treeData="orgTree" :propNames="defaultProps" clearable :expandKey="expandKey" :disabled="disabled"-->
+                          <!--placeholder="请选择父级">-->
+          <!--</el-select-tree>-->
+          <el-cascader
+            :options="orgTree"
+            v-model="selectedOptions"
+            :show-all-levels="false"
+            :props="defaultProps"
+            change-on-select
+          ></el-cascader>
         </el-form-item>
       </el-form>
     </div>
@@ -27,7 +34,6 @@
 
 <script>
 import orgApi from '@/api/org/org'
-import selectTree from '@/components/selectTree.vue'
 
 export default {
   props: {
@@ -54,14 +60,14 @@ export default {
       defaultProps: {
         children: 'children',
         label: 'orgName',
-        id: 'orgId'
+        id: 'orgId',
+        value: 'orgId'
       },
       orgTree: {},
-      expandKey: [this.orgForm.parentId]
+      selectedOptions: []
     }
   },
   components: {
-    'elSelectTree': selectTree
   },
   computed: {
     title () {
@@ -91,6 +97,12 @@ export default {
     save () {
       this.$refs.form.validate(async (valid) => {
         if (valid) {
+          // 只选取最后节点
+          if (this.selectedOptions.length > 0) {
+            this.orgForm.parentId = this.selectedOptions[this.selectedOptions.length - 1]
+            this.orgForm.orgLevels = this.selectedOptions.join('-')
+          }
+
           let res
           if (this.type !== 'edit') {
             // 创建组织
@@ -106,7 +118,7 @@ export default {
               type: 'success'
             })
 
-            if (this.type !== 'edit' && res.data.parentId !== 'root') {
+            if (this.type === 'addSub') {
               this.$emit('addSub', res.data)
               this.isShow = false
             } else {
@@ -127,7 +139,12 @@ export default {
       let res = await orgApi.getOrgSubs(this.rootOrg)
       if (res.state === '0') {
         this.isShow = this.visible
+        // 展示列表
         this.orgTree = res.data
+        // 列表默认值
+        if (this.orgForm.orgLevels) {
+          this.selectedOptions = this.orgForm.orgLevels.split('-')
+        }
       }
     }
 

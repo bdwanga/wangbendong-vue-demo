@@ -95,6 +95,7 @@ export default {
       if (type === 'addSub') {
         let subOrg = orgApi.getEmptyOrg()
         subOrg.parentId = orgInfo.orgId
+        subOrg.orgLevels = `${orgInfo.orgLevels}-${orgInfo.orgId}`
         orgInfo = subOrg
       }
 

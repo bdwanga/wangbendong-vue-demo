@@ -17,6 +17,9 @@ let checkOrgData = (orgData) => {
   if (!orgData.parentId) {
     orgData.parentId = ''
   }
+  if (!orgData.orgLevels) {
+    orgData.orgLevels = ''
+  }
 }
 
 export default {
@@ -44,7 +47,12 @@ export default {
     return resp.data
   },
   getEmptyOrg: () => {
-    return {orgId: '', orgName: '', parentId: ''}
+    return {orgId: '', orgName: '', parentId: '', orgLevels: ''}
+  },
+  // 查询组织
+  getOrg: async (orgId) => {
+    let resp = await axios.get(`/api/orgs/${orgId}`)
+    return resp.data
   },
   // 查询组织详细
   getOrgDetail: async (orgId) => {
