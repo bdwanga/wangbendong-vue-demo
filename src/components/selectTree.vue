@@ -288,26 +288,15 @@ export default {
     },
     setTreezIndex () {
       if (this.visible) {
-        console.log(this.$refs.popper.$el.style.zIndex)
-        let time = setTimeout(() => {
-          this.styleObject.zIndex++
-          clearTimeout(time)
-        }, 100)
-        console.log(this.$refs.popper.$el.style.zIndex)
         if (this.$refs.popper.$el.style.zIndex < 3000) {
+          // console.log(this.$refs.popper.$el.style.zIndex)
           let time = setTimeout(() => {
             this.styleObject.zIndex++
             clearTimeout(time)
+            // 递归执行下去，直到条件满足
+            this.setTreezIndex()
           }, 100)
         }
-        console.log(this.$refs.popper.$el.style.zIndex)
-        if (this.$refs.popper.$el.style.zIndex < 3000) {
-          let time = setTimeout(() => {
-            this.styleObject.zIndex++
-            clearTimeout(time)
-          }, 100)
-        }
-        console.log(this.$refs.popper.$el.style.zIndex)
       }
     },
     resetScrollTop () {
