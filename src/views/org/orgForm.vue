@@ -13,7 +13,7 @@
           <el-input v-model="orgForm.orgName"></el-input>
         </el-form-item>
         <el-form-item label="父级组织" prop="parentId" v-if="orgForm.parentId != 'root'">
-          <el-select-tree v-model="orgForm.parentId" :treeData="orgTree" :propNames="defaultProps" clearable :expandKey="expandKey"
+          <el-select-tree v-model="orgForm.parentId" :treeData="orgTree" :propNames="defaultProps" clearable :expandKey="expandKey" :disabled="disabled"
                           placeholder="请选择父级">
           </el-select-tree>
         </el-form-item>
@@ -71,7 +71,10 @@ export default {
   },
   computed: {
     title () {
-      return this.type === 'add' ? '新增组织' : '修改组织'
+      return this.type === 'add' ? '新增组织' : this.type === 'addSub' ? '添加下级组织' : '修改组织'
+    },
+    disabled () {
+      return this.type === 'addSub'
     }
   },
   mounted () {
@@ -86,7 +89,7 @@ export default {
     visible (val) {
       if (val) {
         this.isShow = this.visible
-        // this.loadOrgTree()
+        this.loadOrgTree()
       }
     }
   },
@@ -95,19 +98,27 @@ export default {
       this.$refs.form.validate(async (valid) => {
         if (valid) {
           let res
-          if (this.type === 'add') {
+          if (this.type !== 'edit') {
+            // 创建组织
             res = await orgApi.create(this.orgForm)
           } else {
+            // 修改组织
             res = await orgApi.modify(this.orgForm)
           }
+          // 成功处理
           if (res.state === '0') {
-            // this.isShow = false
-            // this.$emit('success')
             this.$message({
               message: '保存成功',
               type: 'success'
             })
-            this.$router.push({path: '/orgTree', query: {t: Date.now()}})
+
+            if (this.type !== 'edit') {
+              this.$emit('addSub', res.data)
+              this.isShow = false
+            } else {
+              // 刷新页面
+              this.$router.push({path: '/orgTree', query: {t: Date.now()}})
+            }
           } else {
             this.$message({
               message: res.message,
@@ -117,6 +128,7 @@ export default {
         }
       })
     },
+    // 加载树数据
     async loadOrgTree () {
       let res = await orgApi.getOrgSubs(this.rootOrg)
       if (res.state === '0') {

@@ -28,7 +28,7 @@
       <el-col :span="16" :xs="24" :sm="24" :md="16" :lg="16">
          <user-list :orgId="query.orgId" :isView="true" viewTitle="人员列表"></user-list>
       </el-col>
-      <org-form :visible.sync="visible"  :orgForm="org" :type="editType"></org-form>
+      <org-form :visible.sync="visible"  :orgForm="org" :type="editType" @addSub="addSub"></org-form>
     </el-row>
   </imp-panel>
 </template>
@@ -84,15 +84,33 @@ export default {
       resolve(res.data.list)
     },
     openDialog (e, orgInfo, type) {
+      // 阻止事件传播
       if (e) { e.stopPropagation() }
-      this.visible = true
       if (!orgInfo) {
         orgInfo = orgApi.getEmptyOrg()
       }
+      if (type === 'addSub') {
+        let subOrg = orgApi.getEmptyOrg()
+        subOrg.parentId = orgInfo.orgId
+        orgInfo = subOrg
+      }
+
       this.org = orgInfo
       this.editType = type
+      // 显示弹窗
+      this.visible = true
     },
-
+    // 添加子节点
+    addSub (data) {
+      // console.log(this.$refs.orgTree)
+      // 获取到父节点
+      let parentData = this.$refs.orgTree.getNode(data.parentId).data
+      // 插入数据
+      if (!parentData.children) {
+        this.$set(parentData, 'children', [])
+      }
+      parentData.children.push(data)
+    },
     remove (e, node, data) {
       if (e) { e.stopPropagation() }
       this.$confirm('此操作将永久删除该单位, 是否继续?', '提示', {
@@ -131,6 +149,7 @@ export default {
             <span>{node.label}</span>
           </span>
           <span class="render-content">
+            <i class="fa el-icon-plus" on-click={ (e) => this.openDialog(e, data, 'addSub') }></i>
             <i class="fa el-icon-edit-outline" on-click={ (e) => this.openDialog(e, data, 'edit') }></i>
             <i class="fa el-icon-delete" on-click={ (e) => this.remove(e, node, data) }></i>
           </span>
