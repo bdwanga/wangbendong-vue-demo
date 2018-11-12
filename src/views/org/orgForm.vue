@@ -12,7 +12,7 @@
         <el-form-item label="组织名称" prop="orgName">
           <el-input v-model="orgForm.orgName"></el-input>
         </el-form-item>
-        <el-form-item label="父级组织" prop="parentId" v-if="orgForm.parentId != 'root'">
+        <el-form-item label="父级组织" prop="parentId" v-if="orgForm.parentId != 'root' || type !='edit'">
           <el-select-tree v-model="orgForm.parentId" :treeData="orgTree" :propNames="defaultProps" clearable :expandKey="expandKey" :disabled="disabled"
                           placeholder="请选择父级">
           </el-select-tree>
@@ -46,14 +46,8 @@ export default {
   data () {
     return {
       rules: {
-        orgId: [
-          {required: true, trigger: 'change', message: '请输入组织编码!'}
-        ],
         orgName: [
           {required: true, trigger: 'change', message: '请输入组织名称!'}
-        ],
-        parentId: [
-          {required: true, trigger: 'change', message: '请选择父级组织!'}
         ]
       },
       isShow: false,
@@ -112,7 +106,7 @@ export default {
               type: 'success'
             })
 
-            if (this.type !== 'edit') {
+            if (this.type !== 'edit' && res.data.parentId !== 'root') {
               this.$emit('addSub', res.data)
               this.isShow = false
             } else {

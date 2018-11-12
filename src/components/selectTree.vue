@@ -123,7 +123,7 @@ export default {
       selected: this.multiple ? [] : {},
       inputLength: 20,
       inputWidth: 0,
-      currentPlaceholder: '',
+      currentPlaceholder: '请选择',
       dropdownUl: null,
       visible: false,
       selectedLabel: '',

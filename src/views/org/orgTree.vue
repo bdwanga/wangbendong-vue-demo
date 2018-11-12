@@ -88,6 +88,8 @@ export default {
       if (e) { e.stopPropagation() }
       if (!orgInfo) {
         orgInfo = orgApi.getEmptyOrg()
+        // 默认父节点为根节点
+        orgInfo.parentId = 'root'
       }
       if (type === 'addSub') {
         let subOrg = orgApi.getEmptyOrg()
@@ -103,13 +105,10 @@ export default {
     // 添加子节点
     addSub (data) {
       // console.log(this.$refs.orgTree)
-      // 获取到父节点
-      let parentData = this.$refs.orgTree.getNode(data.parentId).data
-      // 插入数据
-      if (!parentData.children) {
-        this.$set(parentData, 'children', [])
+      if (data.parentId) {
+      // 追加父节点数据
+        this.$refs.orgTree.append(data, this.$refs.orgTree.getNode(data.parentId))
       }
-      parentData.children.push(data)
     },
     remove (e, node, data) {
       if (e) { e.stopPropagation() }
