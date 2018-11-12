@@ -56,8 +56,7 @@ export default {
       },
       org: {},
       editType: 'add',
-      visible: false,
-      resolve: {}
+      visible: false
     }
   },
   components: {
@@ -75,6 +74,7 @@ export default {
         }
       }
     },
+    // 加载数据
     async loadNode (node, resolve) {
       if (node.level > 0) {
         this.query.parentId = node.data.orgId
@@ -83,6 +83,7 @@ export default {
       let res = await orgApi.paging(this.query)
       resolve(res.data.list)
     },
+    // 打开新增修改页面
     openDialog (e, orgInfo, type) {
       // 阻止事件传播
       if (e) { e.stopPropagation() }
@@ -110,6 +111,7 @@ export default {
         this.$refs.orgTree.append(data, this.$refs.orgTree.getNode(data.parentId))
       }
     },
+    // 删除节点
     remove (e, node, data) {
       if (e) { e.stopPropagation() }
       this.$confirm('此操作将永久删除该单位, 是否继续?', '提示', {
@@ -141,6 +143,7 @@ export default {
 
       })
     },
+    // 组织树自定义内容
     renderContent (h, {node, data, store}) {
       return (
         <span>

@@ -73,13 +73,16 @@ import userForm from './userForm'
 
 export default {
   props: {
+    // 入参单位
     orgId: {
       default: ''
     },
+    // 入参是否只是查看
     isView: {
       type: Boolean,
       default: false
     },
+    // 入参显示标题
     viewTitle: {
       type: String,
       default: ''
@@ -88,7 +91,9 @@ export default {
   data () {
     return {
       visible: false,
+      // 表格数据
       tableData: [],
+      // 查询条件
       query: {userName: '', orgId: '', pageIndex: 1, pageSize: 5, total: 0},
       listLoading: false,
       user: {},
@@ -110,6 +115,7 @@ export default {
     }
   },
   methods: {
+    // 加载数据
     async loadData () {
       let res = await userApi.paging(this.query)
       this.tableData = res.data.list
@@ -123,9 +129,11 @@ export default {
       this.query.pageSize = size
       this.loadData()
     },
+    // 搜索
     search () {
       this.loadData()
     },
+    // 删除
     async remove (id) {
       this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
@@ -150,6 +158,7 @@ export default {
 
       })
     },
+    // 打开新增修改页面
     openDialog (userInfo, type) {
       this.visible = true
       if (!userInfo) {
