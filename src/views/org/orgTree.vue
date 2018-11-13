@@ -60,11 +60,8 @@ export default {
       if (!data) {
         return
       }
-      if (data.parentId === 'root') {
-        this.query.orgId = ''
-      } else {
-        this.query.orgId = data.orgId
-      }
+
+      this.query.orgId = data.orgId
     },
     // 加载数据
     async loadNode (node, resolve) {
@@ -90,7 +87,11 @@ export default {
       if (type === 'addSub') {
         let subOrg = orgApi.getEmptyOrg()
         subOrg.parentId = orgInfo.orgId
-        subOrg.orgLevels = `${orgInfo.orgLevels}-${orgInfo.orgId}`
+        if (orgInfo.orgLevels) {
+          subOrg.orgLevels = `${orgInfo.orgLevels}-${orgInfo.orgId}`
+        } else {
+          subOrg.orgLevels = orgInfo.orgId
+        }
         orgInfo = subOrg
       }
 

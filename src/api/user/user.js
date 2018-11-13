@@ -24,7 +24,7 @@ export default {
   // 分页查询
   paging: async (query) => {
     checkUserData(query)
-    let resp = await axios.get(`/api/users?pageIndex=${query.pageIndex}&pageSize=${query.pageSize}&userName=${query.userName}&orgId=${query.orgId}`)
+    let resp = await axios.get(`/api/users?pageIndex=${query.pageIndex}&pageSize=${query.pageSize}&userName=${query.userName}&orgId=${query.orgId}&isHasSub=${query.isHasSub}`)
     return resp.data
   },
   // 创建用户

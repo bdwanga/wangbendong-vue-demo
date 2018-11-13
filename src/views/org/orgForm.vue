@@ -19,6 +19,7 @@
             :show-all-levels="false"
             :props="defaultProps"
             change-on-select
+            :disabled="disabled"
           ></el-cascader>
         </el-form-item>
       </el-form>
@@ -81,10 +82,18 @@ export default {
       this.$refs.form.validate(async (valid) => {
         if (!valid) { return }
 
-        // 只选取最后节点
         if (this.selectedOptions.length > 0) {
+          let tempOrgLevels = this.selectedOptions.join('-')
+          if (tempOrgLevels.indexOf(this.orgForm.orgId) !== -1 && this.type === 'edit') {
+            this.$message({
+              message: '父组织不能调整为其下级组织或当前组织',
+              type: 'error'
+            })
+            return
+          }
+          // 只选取最后节点
           this.orgForm.parentId = this.selectedOptions[this.selectedOptions.length - 1]
-          this.orgForm.orgLevels = this.selectedOptions.join('-')
+          this.orgForm.orgLevels = tempOrgLevels
         }
 
         let res

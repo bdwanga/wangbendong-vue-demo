@@ -29,8 +29,14 @@
           label="昵称">
         </el-table-column>
         <el-table-column
-          prop="orgName"
-          label="单位">
+          prop="orgName" v-if="isView">
+            <template slot="header" slot-scope="slot" >
+              <span>单位</span>
+              <el-checkbox v-model="isHasSub" style="float: right">包含下级</el-checkbox>
+            </template>
+        </el-table-column>
+        <el-table-column
+          prop="orgName" label="单位" v-else>
         </el-table-column>
         <el-table-column label="操作" width="180" v-if="!isView">
           <template slot-scope="scope">
@@ -86,10 +92,11 @@ export default {
       // 表格数据
       tableData: [],
       // 查询条件
-      query: {userName: '', orgId: '', pageIndex: 1, pageSize: 5, total: 0},
+      query: {userName: '', orgId: '', pageIndex: 1, pageSize: 5, total: 0, isHasSub: true},
       listLoading: false,
       user: {},
-      editType: 'add'
+      editType: 'add',
+      isHasSub: true
     }
   },
   components: {
@@ -103,6 +110,10 @@ export default {
   watch: {
     orgId (val) {
       this.query.orgId = val
+      this.loadData()
+    },
+    isHasSub (val) {
+      this.query.isHasSub = this.isHasSub
       this.loadData()
     }
   },
