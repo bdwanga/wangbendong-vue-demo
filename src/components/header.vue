@@ -5,16 +5,17 @@
       <el-breadcrumb-item :to="{ path: '/manger' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item v-for="(item, index) in $route.meta" :key="index">{{item}}</el-breadcrumb-item>
     </el-breadcrumb>
-    <div>
-    <el-dropdown @command="handleCommand" menu-align='start'>
-      <img src="static/img/default.jpg" class="avator">
-      <el-dropdown-menu slot="dropdown">
+    <el-dropdown @command="handleCommand" menu-align='start' style="vertical-align:middle">
+      <div class="frofile">
+      <img src="static/img/default.jpg" class="avator" style="vertical-align:middle">
+      {{userInfo.userName}}
+        <i class="el-icon-caret-bottom"></i>
+      </div>
+      <el-dropdown-menu slot="dropdown" style="width: 90px">
         <el-dropdown-item command="home">首页</el-dropdown-item>
         <el-dropdown-item command="singout">退出</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
-   <span >{{userInfo.userName}}</span>
-    </div>
   </div>
 </template>
 
@@ -46,7 +47,7 @@ export default {
         const res = await userApi.signOut()
         if (res.state === '0') {
           this.setUserInfo({})
-          window.sessionStorage.removeItem('userInfo')
+          window.sessionStorage.clear()
           this.$message({
             type: 'success',
             message: '退出成功'
@@ -76,10 +77,17 @@ export default {
     padding-left: 20px;
   }
 
+  .frofile{
+    padding-right: 15px;
+  }
+  .frofile :hover{
+    cursor:pointer;
+  }
+
   .avator {
     .wh(36px, 36px);
     border-radius: 50%;
-    margin-right: 37px;
+    margin-right: 5px;
   }
 
   .el-dropdown-menu__item {

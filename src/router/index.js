@@ -5,11 +5,9 @@ import home from '@/views/frame/home'
 import userList from '@/views/user/userList'
 import orgTree from '@/views/org/orgTree'
 import login from '@/views/frame/login'
-// import store from '@/store'
+import auth from '@/common/auth'
 
 Vue.use(Router)
-
-// const {state} = store
 
 const router = new Router({
   routes: [
@@ -43,7 +41,8 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   // console.log(window.sessionStorage.getItem('userInfo'))
-  if (to.path !== '/login' && (!window.sessionStorage.getItem('userInfo'))) {
+  // console.log(auth.isLogin())
+  if (to.path !== '/login' && !auth.isLogin()) {
     next({
       path: '/login',
       query: {redirect: to.fullPath}

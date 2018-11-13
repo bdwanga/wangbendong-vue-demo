@@ -69,6 +69,7 @@ export default {
           })
 
           this.setUserInfo(this.loginForm)
+          // console.log(this.userInfo)
           window.sessionStorage.setItem('userInfo', JSON.stringify(this.loginForm))
           this.$router.push('/manger')
         }
