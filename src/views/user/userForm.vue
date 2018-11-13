@@ -42,17 +42,10 @@ import orgApi from '@/api/org/org'
 
 export default {
   props: {
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    userForm: {
-      type: Object
-    },
+    visible: {type: Boolean, default: false},
+    userForm: {type: Object},
     type: {},
-    rootOrg: {
-      default: 'root'
-    }
+    rootOrg: {default: 'root'}
   },
   data () {
     return {
@@ -66,12 +59,7 @@ export default {
       },
       isShow: false,
       orgTree: {},
-      defaultProps: {
-        children: 'children',
-        label: 'orgName',
-        id: 'orgId',
-        value: 'orgId'
-      },
+      defaultProps: {children: 'children', label: 'orgName', id: 'orgId', value: 'orgId'},
       selectedOptions: []
     }
   },
@@ -89,46 +77,46 @@ export default {
   },
   watch: {
     isShow (val) {
-      if (!val) {
-        this.$emit('update:visible', false)
+      if (val) {
+        return
       }
+      this.$emit('update:visible', false)
     },
     visible (val) {
-      if (val) {
-        this.isShow = this.visible
-        this.getOrgLevelName()
+      if (!val) {
+        return
       }
+      this.isShow = this.visible
+      this.getOrgLevelName()
     }
   },
   methods: {
     save () {
       this.$refs.form.validate(async (valid) => {
-        if (valid) {
-          // 只选取最后节点
-          if (this.selectedOptions.length > 0) {
-            this.userForm.orgId = this.selectedOptions[this.selectedOptions.length - 1]
-          }
-
-          let res
-          if (this.type === 'add') {
-            res = await userApi.create(this.userForm)
-          } else {
-            res = await userApi.modify(this.userForm)
-          }
-          if (res.state === '0') {
-            this.isShow = false
-            this.$emit('success')
-            this.$message({
-              message: '保存成功',
-              type: 'success'
-            })
-          } else {
-            this.$message({
-              message: res.message,
-              type: 'error'
-            })
-          }
+        if (!valid) {
+          return
         }
+        // 只选取最后节点
+        if (this.selectedOptions.length > 0) {
+          this.userForm.orgId = this.selectedOptions[this.selectedOptions.length - 1]
+        }
+
+        let res
+        if (this.type === 'add') {
+          res = await userApi.create(this.userForm)
+        } else {
+          res = await userApi.modify(this.userForm)
+        }
+        if (res.state !== '0') {
+          return
+        }
+
+        this.isShow = false
+        this.$emit('success')
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        })
       })
     },
     async loadOrgTree () {

@@ -43,17 +43,8 @@ export default {
   data () {
     return {
       orgTree: [],
-      props: {
-        label: 'orgName',
-        id: 'orgId'
-      },
-      query: {
-        pageIndex: 1,
-        pageSize: 0,
-        orgName: '',
-        parentId: 'root',
-        orgId: ''
-      },
+      props: {label: 'orgName', id: 'orgId'},
+      query: {pageIndex: 1, pageSize: 0, orgName: '', parentId: 'root', orgId: ''},
       org: {},
       editType: 'add',
       visible: false
@@ -66,12 +57,13 @@ export default {
   },
   methods: {
     handleNodeClick (data) {
-      if (data) {
-        if (data.parentId === 'root') {
-          this.query.orgId = ''
-        } else {
-          this.query.orgId = data.orgId
-        }
+      if (!data) {
+        return
+      }
+      if (data.parentId === 'root') {
+        this.query.orgId = ''
+      } else {
+        this.query.orgId = data.orgId
       }
     },
     // 加载数据
@@ -87,11 +79,14 @@ export default {
     openDialog (e, orgInfo, type) {
       // 阻止事件传播
       if (e) { e.stopPropagation() }
+
       if (!orgInfo) {
         orgInfo = orgApi.getEmptyOrg()
         // 默认父节点为根节点
         orgInfo.parentId = 'root'
+        orgInfo.orgLevels = ''
       }
+
       if (type === 'addSub') {
         let subOrg = orgApi.getEmptyOrg()
         subOrg.parentId = orgInfo.orgId
@@ -115,6 +110,7 @@ export default {
     // 删除节点
     remove (e, node, data) {
       if (e) { e.stopPropagation() }
+
       this.$confirm('此操作将永久删除该单位, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -122,23 +118,19 @@ export default {
       }).then(async () => {
         let resp = await orgApi.remove(data.orgId)
         // state为0表示删除成功
-        if (resp.state === '0') {
-          // 删除节点
-          let parent = node.parent
-          let children = parent.childNodes
-          let index = children.findIndex(d => d.data.orgId === data.orgId)
-          children.splice(index, 1)
-
-          this.$message({
-            message: '删除成功!',
-            type: 'success'
-          })
-        } else {
-          this.$message({
-            message: resp.message,
-            type: 'error'
-          })
+        if (resp.state !== '0') {
+          return
         }
+        // 删除节点
+        let parent = node.parent
+        let children = parent.childNodes
+        let index = children.findIndex(d => d.data.orgId === data.orgId)
+        children.splice(index, 1)
+
+        this.$message({
+          message: '删除成功!',
+          type: 'success'
+        })
         this.loadData()
       }).catch(() => {
 

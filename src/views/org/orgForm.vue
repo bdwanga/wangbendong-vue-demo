@@ -6,9 +6,6 @@
   >
     <div>
       <el-form ref="form" label-width="100px" :model="orgForm" :rules="rules">
-        <!--<el-form-item label="组织编码" prop="orgId" v-if="type=='add'">-->
-          <!--<el-input v-model="orgForm.orgId"></el-input>-->
-        <!--</el-form-item>-->
         <el-form-item label="组织名称" prop="orgName">
           <el-input v-model="orgForm.orgName"></el-input>
         </el-form-item>
@@ -37,17 +34,10 @@ import orgApi from '@/api/org/org'
 
 export default {
   props: {
-    visible: {
-      type: Boolean,
-      default: false
-    },
-    orgForm: {
-      type: Object
-    },
+    visible: {type: Boolean, default: false},
+    orgForm: {type: Object},
     type: {},
-    rootOrg: {
-      default: 'root'
-    }
+    rootOrg: {default: 'root'}
   },
   data () {
     return {
@@ -57,12 +47,7 @@ export default {
         ]
       },
       isShow: false,
-      defaultProps: {
-        children: 'children',
-        label: 'orgName',
-        id: 'orgId',
-        value: 'orgId'
-      },
+      defaultProps: {children: 'children', label: 'orgName', id: 'orgId', value: 'orgId'},
       orgTree: {},
       selectedOptions: []
     }
@@ -82,69 +67,70 @@ export default {
   },
   watch: {
     isShow (val) {
-      if (!val) {
-        this.$emit('update:visible', false)
-      }
+      if (val) { return }
+      this.$emit('update:visible', false)
     },
     visible (val) {
-      if (val) {
-        this.isShow = this.visible
-        this.loadOrgTree()
-      }
+      if (!val) { return }
+      this.isShow = this.visible
+      this.loadOrgTree()
     }
   },
   methods: {
     save () {
       this.$refs.form.validate(async (valid) => {
-        if (valid) {
-          // 只选取最后节点
-          if (this.selectedOptions.length > 0) {
-            this.orgForm.parentId = this.selectedOptions[this.selectedOptions.length - 1]
-            this.orgForm.orgLevels = this.selectedOptions.join('-')
-          }
+        if (!valid) { return }
 
-          let res
-          if (this.type !== 'edit') {
-            // 创建组织
-            res = await orgApi.create(this.orgForm)
-          } else {
-            // 修改组织
-            res = await orgApi.modify(this.orgForm)
-          }
-          // 成功处理
-          if (res.state === '0') {
-            this.$message({
-              message: '保存成功',
-              type: 'success'
-            })
+        // 只选取最后节点
+        if (this.selectedOptions.length > 0) {
+          this.orgForm.parentId = this.selectedOptions[this.selectedOptions.length - 1]
+          this.orgForm.orgLevels = this.selectedOptions.join('-')
+        }
 
-            if (this.type === 'addSub') {
-              this.$emit('addSub', res.data)
-              this.isShow = false
-            } else {
-              // 刷新页面
-              this.$router.push({path: '/orgTree', query: {t: Date.now()}})
-            }
-          } else {
-            this.$message({
-              message: res.message,
-              type: 'error'
-            })
-          }
+        let res
+        if (this.type !== 'edit') {
+          // 创建组织
+          res = await orgApi.create(this.orgForm)
+        } else {
+          // 修改组织
+          res = await orgApi.modify(this.orgForm)
+        }
+        // 不成功返回
+        if (res.state !== '0') {
+          return
+        }
+        // 成功处理
+        this.$message({
+          message: '保存成功',
+          type: 'success'
+        })
+
+        if (this.type === 'addSub') {
+          this.$emit('addSub', res.data)
+          this.isShow = false
+        } else {
+          // 刷新页面
+          this.$router.push({path: '/orgTree', query: {t: Date.now()}})
         }
       })
     },
     // 加载树数据
     async loadOrgTree () {
       let res = await orgApi.getOrgSubs(this.rootOrg)
-      if (res.state === '0') {
-        this.isShow = this.visible
-        // 展示列表
-        this.orgTree = res.data
-        // 列表默认值
-        if (this.orgForm.orgLevels) {
-          this.selectedOptions = this.orgForm.orgLevels.split('-')
-        }
+      // 不成功返回
+      if (res.state !== '0') {
+        return
+      }
+      this.isShow = this.visible
+
+      // 展示列表
+      this.orgTree = res.data
+
+      // 列表默认值
+      if (this.orgForm.orgLevels) {
+        this.selectedOptions = this.orgForm.orgLevels.split('-')
+      } else {
+        this.$set(this, 'selectedOptions', [])
       }
     }
 

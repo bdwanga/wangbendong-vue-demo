@@ -1,6 +1,8 @@
-import axios from 'axios'
+import axios from '@/common/axios'
+import qs from 'qs'
 
-let checkUserData = (user) => {
+// 检查数据
+const checkUserData = (user) => {
   if (!user) {
     return ''
   }
@@ -40,6 +42,16 @@ export default {
   // 删除用户
   remove: async (id) => {
     let resp = await axios.delete(`/api/users/${id}`)
+    return resp.data
+  },
+  // 登陆 不使用json提交
+  signIn: async (user) => {
+    let resp = await axios.post(`/api/users/actions/sign`, qs.stringify(user), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+    return resp.data
+  },
+  // 登出
+  signOut: async (id) => {
+    let resp = await axios.delete(`/api/users/actions/sign`)
     return resp.data
   },
   getEmptyUser: () => {

@@ -74,19 +74,11 @@ import userForm from './userForm'
 export default {
   props: {
     // 入参单位
-    orgId: {
-      default: ''
-    },
+    orgId: {default: ''},
     // 入参是否只是查看
-    isView: {
-      type: Boolean,
-      default: false
-    },
+    isView: {type: Boolean, default: false},
     // 入参显示标题
-    viewTitle: {
-      type: String,
-      default: ''
-    }
+    viewTitle: {type: String, default: ''}
   },
   data () {
     return {
@@ -142,17 +134,15 @@ export default {
       }).then(async () => {
         let resp = await userApi.remove(id)
         // state为0表示删除成功
-        if (resp.state === '0') {
-          this.$message({
-            message: '删除成功!',
-            type: 'success'
-          })
-        } else {
-          this.$message({
-            message: '删除失败!',
-            type: 'error'
-          })
+        if (resp.state !== '0') {
+          return
         }
+
+        this.$message({
+          message: '删除成功!',
+          type: 'success'
+        })
+
         this.loadData()
       }).catch(() => {
 

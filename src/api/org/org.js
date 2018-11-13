@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from '@/common/axios'
 
 // 校验数据
 let checkOrgData = (orgData) => {
