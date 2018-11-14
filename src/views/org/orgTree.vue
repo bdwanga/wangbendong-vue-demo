@@ -44,7 +44,7 @@ export default {
     return {
       orgTree: [],
       props: {label: 'orgName', id: 'orgId'},
-      query: {pageIndex: 1, pageSize: 0, orgName: '', parentId: 'root', orgId: ''},
+      query: {pageIndex: 1, pageSize: 0, orgName: '', parentId: 'root', orgId: 'root'},
       org: {},
       editType: 'add',
       visible: false
