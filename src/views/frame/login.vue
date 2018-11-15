@@ -26,7 +26,7 @@
 
 <script>
 import userApi from '@/api/user/user'
-import {mapState, mapMutations} from 'vuex'
+import {mapState} from 'vuex'
 
 export default {
   data () {
@@ -54,11 +54,11 @@ export default {
     ...mapState(['userInfo'])
   },
   methods: {
-    ...mapMutations(['setUserInfo']), // store函数映射直接提交
-    async submitForm (formName) {
+    submitForm (formName) {
       this.$refs[formName].validate(async (valid) => {
         if (valid) {
-          const res = await userApi.signIn({userName: this.loginForm.userName, password: this.loginForm.password})
+          // 直接写数据
+          const res = await userApi.signIn(this.loginForm)
           if (res.state !== '0') {
             return
           }
@@ -68,9 +68,9 @@ export default {
             message: '登录成功'
           })
 
-          this.setUserInfo(this.loginForm)
+          this.$store.dispatch('getUserData')
           // console.log(this.userInfo)
-          window.sessionStorage.setItem('userInfo', JSON.stringify(this.loginForm))
+          window.sessionStorage.setItem('userInfo', JSON.stringify(this.userInfo))
           this.$router.push('/manger')
         }
       })

@@ -78,14 +78,15 @@ export default {
       if (e) { e.stopPropagation() }
 
       if (!orgInfo) {
-        orgInfo = orgApi.getEmptyOrg()
+        // 在组件写
+        orgInfo = {}
         // 默认父节点为根节点
         orgInfo.parentId = 'root'
         orgInfo.orgLevels = ''
       }
 
       if (type === 'addSub') {
-        let subOrg = orgApi.getEmptyOrg()
+        let subOrg = {}
         subOrg.parentId = orgInfo.orgId
         if (orgInfo.orgLevels) {
           subOrg.orgLevels = `${orgInfo.orgLevels}-${orgInfo.orgId}`

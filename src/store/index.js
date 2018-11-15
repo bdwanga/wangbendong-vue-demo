@@ -11,6 +11,13 @@ const state = {
   }
 }
 
+// getters
+const getters = {
+  getUserInfo: (state, getters, rootState) => {
+    return state.userInfo
+  }
+}
+
 const mutations = {
   setUserInfo (state, userInfo) {
     state.userInfo = userInfo
@@ -19,8 +26,8 @@ const mutations = {
 
 const actions = {
   async getUserData ({commit}) {
-    const res = await userApi.getUser({})
-    if (res.status !== '0') {
+    const res = await userApi.getSignUser()
+    if (res.state !== '0') {
       return
     }
     commit('setUserInfo', res.data)
@@ -30,5 +37,6 @@ const actions = {
 export default new Vuex.Store({
   state,
   actions,
-  mutations
+  mutations,
+  getters
 })

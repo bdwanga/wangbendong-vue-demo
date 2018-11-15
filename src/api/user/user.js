@@ -54,8 +54,9 @@ export default {
     let resp = await axios.delete(`/api/users/actions/sign`)
     return resp.data
   },
-  getEmptyUser: () => {
-    return {name: '', nick: '', password: '', orgId: ''}
+  // 获取当前登录用户数据
+  getSignUser: async () => {
+    let resp = await axios.get(`/api/users/actions/sign`)
+    return resp.data
   }
-
 }

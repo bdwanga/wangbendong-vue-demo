@@ -42,7 +42,7 @@
           <template slot-scope="scope">
             <el-button
               size="small"
-              type="default"
+              type="primary"
               icon="el-icon-edit"
               @click="openDialog(scope.row,'edit')"
             >编辑
@@ -137,7 +137,7 @@ export default {
       this.loadData()
     },
     // 删除
-    async remove (id) {
+    remove (id) {
       this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -163,7 +163,7 @@ export default {
     openDialog (userInfo, type) {
       this.visible = true
       if (!userInfo) {
-        userInfo = userApi.getEmptyUser()
+        userInfo = {}
       }
       this.user = userInfo
       this.editType = type

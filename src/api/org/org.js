@@ -46,9 +46,6 @@ export default {
     let resp = await axios.delete(`/api/orgs/${orgId}`)
     return resp.data
   },
-  getEmptyOrg: () => {
-    return {orgId: '', orgName: '', parentId: '', orgLevels: ''}
-  },
   // 查询组织
   getOrg: async (orgId) => {
     let resp = await axios.get(`/api/orgs/${orgId}`)

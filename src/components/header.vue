@@ -5,10 +5,10 @@
       <el-breadcrumb-item :to="{ path: '/manger' }">首页</el-breadcrumb-item>
       <el-breadcrumb-item v-for="(item, index) in $route.meta" :key="index">{{item}}</el-breadcrumb-item>
     </el-breadcrumb>
-    <el-dropdown @command="handleCommand" menu-align='start' style="vertical-align:middle">
+    <el-dropdown @command="handleCommand" menu-align='start'>
       <div class="frofile">
-      <img src="static/img/default.jpg" class="avator" style="vertical-align:middle">
-      {{userInfo.userName}}
+      <img src="static/img/default.jpg" class="avator">
+      {{userInfo.name}}
         <i class="el-icon-caret-bottom"></i>
       </div>
       <el-dropdown-menu slot="dropdown" style="width: 90px">
@@ -88,6 +88,7 @@ export default {
     .wh(36px, 36px);
     border-radius: 50%;
     margin-right: 5px;
+    vertical-align:middle;
   }
 
   .el-dropdown-menu__item {

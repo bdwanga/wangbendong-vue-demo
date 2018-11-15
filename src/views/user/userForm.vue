@@ -26,6 +26,7 @@
             :props="defaultProps"
             change-on-select
           ></el-cascader>
+          <el-button type="text" icon="el-icon-delete" @click="selectedOptions=[]"></el-button>
         </el-form-item>
       </el-form>
     </div>
