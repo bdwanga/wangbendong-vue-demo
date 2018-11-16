@@ -13,7 +13,7 @@
             <el-input type="password" placeholder="密码" v-model="loginForm.password"></el-input>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('loginForm')" class="submit_btn">登陆</el-button>
+            <el-button type="primary" @click="submitForm('loginForm')" class="submit_btn">登录</el-button>
           </el-form-item>
         </el-form>
         <!--<p class="tip">温馨提示：</p>-->
@@ -68,7 +68,7 @@ export default {
             message: '登录成功'
           })
 
-          this.$store.dispatch('getUserData')
+          await this.$store.dispatch('getUserData')
           // console.log(this.userInfo)
           window.sessionStorage.setItem('userInfo', JSON.stringify(this.userInfo))
           this.$router.push('/manger')

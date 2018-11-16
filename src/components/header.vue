@@ -53,11 +53,6 @@ export default {
             message: '退出成功'
           })
           this.$router.push('/login')
-        } else {
-          this.$message({
-            type: 'error',
-            message: res.message
-          })
         }
       }
     }
