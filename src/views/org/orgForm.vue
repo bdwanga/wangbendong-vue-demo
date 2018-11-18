@@ -120,7 +120,7 @@ export default {
           this.isShow = false
         } else {
           // 刷新页面
-          this.$router.push({path: '/orgTree', query: {t: Date.now()}})
+          this.$router.push({name: 'orgtree', query: {t: Date.now()}})
         }
       })
     },

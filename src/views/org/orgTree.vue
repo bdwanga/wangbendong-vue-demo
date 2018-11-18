@@ -1,6 +1,6 @@
 <template>
   <imp-panel>
-    <h3 class="box-title" slot="header" style="width: 100%;">
+    <h3 class="box-title fillwidth" slot="header">
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item>
           <el-button type="primary" icon="el-icon-plus" @click="openDialog($event,'','add')">新增</el-button>
@@ -10,8 +10,8 @@
         <!--</el-form-item>-->
       </el-form>
     </h3>
-    <el-row slot="body" :gutter="24" style="margin-bottom: 20px;">
-      <el-col :span="8" :xs="24" :sm="24" :md="8" :lg="8" style="margin-bottom: 20px;overflow: auto">
+    <el-row slot="body" :gutter="24">
+      <el-col :span="8" :xs="24" :sm="24" :md="8" :lg="8">
         <el-card class="box-card" >
         <el-tree v-if="orgTree"
                  :load="loadNode"
