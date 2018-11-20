@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import userApi from '@/api/user/user'
 
 Vue.use(Vuex)
 
@@ -25,12 +24,10 @@ const mutations = {
 }
 
 const actions = {
-  async getUserData ({commit}) {
-    const res = await userApi.getSignUser()
-    if (res.state !== '0') {
-      return
-    }
-    commit('setUserInfo', res.data)
+  setUserInfo ({commit}, userInfo) {
+    commit('setUserInfo', userInfo)
+    // 同步到session
+    window.sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
   }
 }
 

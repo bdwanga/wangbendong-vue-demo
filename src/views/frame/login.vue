@@ -68,9 +68,7 @@ export default {
             message: '登录成功'
           })
 
-          await this.$store.dispatch('getUserData')
-          // console.log(this.userInfo)
-          window.sessionStorage.setItem('userInfo', JSON.stringify(this.userInfo))
+          await this.$store.dispatch('setUserInfo', res.data)
           this.$router.push('/manger')
         }
       })

@@ -44,7 +44,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  // console.log(window.sessionStorage.getItem('userInfo'))
   // console.log(auth.isLogin())
   if (to.path !== '/login' && !auth.isLogin()) {
     next({

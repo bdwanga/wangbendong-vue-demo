@@ -22,7 +22,7 @@
 <script>
 import userApi from '@/api/user/user'
 import {baseImgPath} from '@/config/env'
-import {mapState, mapMutations} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 
 export default {
   data () {
@@ -39,7 +39,7 @@ export default {
     ...mapState(['userInfo'])
   },
   methods: {
-    ...mapMutations(['setUserInfo']), // store函数映射直接提交
+    ...mapActions(['setUserInfo']), // store函数映射直接提交
     async handleCommand (command) {
       if (command === 'home') {
         this.$router.push('/manger')
@@ -47,7 +47,6 @@ export default {
         const res = await userApi.signOut()
         if (res.state === '0') {
           this.setUserInfo({})
-          window.sessionStorage.clear()
           this.$message({
             type: 'success',
             message: '退出成功'
