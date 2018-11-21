@@ -41,8 +41,7 @@ axios.interceptors.response.use(
       switch (error.response.status) {
         case 401:
           // 返回 401 清除token信息并跳转到登录页面
-          store.commit('setUserInfo', {})
-          window.sessionStorage.removeItem('userInfo')
+          store.dispatch('setUserInfo', {})
           router.replace({
             path: 'login',
             query: {redirect: router.currentRoute.fullPath}
