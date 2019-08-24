@@ -60,8 +60,8 @@ axios.interceptors.response.use(
           })
       }
     }
-
-    return Promise.reject(error.response.data)
+    return error.response
+    // return Promise.reject(error.response.data)
   }
 )
 

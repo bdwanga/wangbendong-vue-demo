@@ -45,8 +45,12 @@ export default {
     return resp.data
   },
   // 登陆 不使用json提交
-  signIn: async (user) => {
-    let resp = await axios.post(`/api/users/actions/sign`, qs.stringify(user), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
+  signIn: async (user, smsLogin) => {
+    let url = `/api/users/actions/sign`
+    if (smsLogin) {
+      url = `/api/users/actions/sign/bysms`
+    }
+    let resp = await axios.post(url, qs.stringify(user), {headers: {'Content-Type': 'application/x-www-form-urlencoded'}})
     return resp.data
   },
   // 登出
@@ -57,6 +61,11 @@ export default {
   // 获取当前登录用户数据
   getSignUser: async () => {
     let resp = await axios.get(`/api/users/actions/sign`)
+    return resp.data
+  },
+  // 获取当前登录用户数据
+  sendSmsCode: async (phone) => {
+    let resp = await axios.get(`/api/users/actions/smscode/${phone}`)
     return resp.data
   }
 }
